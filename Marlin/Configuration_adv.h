@@ -213,8 +213,8 @@
 //homing hits the endstop, then retracts by this distance, before it tries to slowly bump again:
 #define X_HOME_BUMP_MM 5
 #define Y_HOME_BUMP_MM 5
-#define Z_HOME_BUMP_MM 2
-#define HOMING_BUMP_DIVISOR {2, 2, 4}  // Re-Bump Speed Divisor (Divides the Homing Feedrate)
+#define Z_HOME_BUMP_MM 5 // deltas need the same for all three axis
+#define HOMING_BUMP_DIVISOR {10, 10, 20}  // Re-Bump Speed Divisor (Divides the Homing Feedrate)
 //#define QUICK_HOME  //if this is defined, if both x and y are to be homed, a diagonal move will be performed initially.
 
 // When G28 is called, this option will make Y home before X
@@ -251,7 +251,7 @@
 #define DEFAULT_MINSEGMENTTIME        20000
 
 // If defined the movements slow down when the look ahead buffer is only half full
-#define SLOWDOWN
+//#define SLOWDOWN
 
 // Frequency limit
 // See nophead's blog for more info
@@ -322,7 +322,7 @@
   #endif
 
   // This allows hosts to request long names for files and folders with M33
-  //#define LONG_FILENAME_HOST_SUPPORT
+  #define LONG_FILENAME_HOST_SUPPORT
 
 #endif // SDSUPPORT
 
@@ -362,9 +362,18 @@
   #define BABYSTEP_XY  //not only z, but also XY in the menu. more clutter, more functions
   #define BABYSTEP_INVERT_Z false  //true for inverse movements in Z
   #define BABYSTEP_Z_MULTIPLICATOR 2 //faster z movements
-#endif
 
 // @section extruder
+  #ifdef COREXY
+    #error BABYSTEPPING not implemented for COREXY yet.
+  #endif
+
+  #ifdef DELTA
+    #ifdef BABYSTEP_XY
+      #error BABYSTEPPING only implemented for Z axis on deltabots.
+    #endif
+  #endif
+#endif
 
 // extruder advance constant (s2/mm3)
 //
@@ -377,9 +386,14 @@
 
 #ifdef ADVANCE
   #define EXTRUDER_ADVANCE_K .0
+
   #define D_FILAMENT 2.85
   #define STEPS_MM_E 836
-#endif
+  #define EXTRUSION_AREA (0.25 * D_FILAMENT * D_FILAMENT * 3.14159)
+  #define STEPS_PER_CUBIC_MM_E (axis_steps_per_unit[E_AXIS]/ EXTRUSION_AREA)
+
+// @section extras
+#endif // ADVANCE
 
 // @section extras
 
@@ -390,6 +404,22 @@
 const unsigned int dropsegments=5; //everything with less than this number of steps will be ignored as move and joined with the next movement
 
 // @section temperature
+
+// Power Signal Control Definitions
+// By default use ATX definition
+#ifndef POWER_SUPPLY
+  #define POWER_SUPPLY 1
+#endif
+// 1 = ATX
+#if (POWER_SUPPLY == 1)
+  #define PS_ON_AWAKE  LOW
+  #define PS_ON_ASLEEP HIGH
+#endif
+// 2 = X-Box 360 203W
+#if (POWER_SUPPLY == 2)
+  #define PS_ON_AWAKE  HIGH
+  #define PS_ON_ASLEEP LOW
+#endif
 
 // Control heater 0 and heater 1 in parallel.
 //#define HEATERS_PARALLEL
@@ -402,10 +432,10 @@ const unsigned int dropsegments=5; //everything with less than this number of st
 
 // The number of linear motions that can be in the plan at any give time.
 // THE BLOCK_BUFFER_SIZE NEEDS TO BE A POWER OF 2, i.g. 8,16,32 because shifts and ors are used to do the ring-buffering.
-#ifdef SDSUPPORT
+#if defined SDSUPPORT
   #define BLOCK_BUFFER_SIZE 16   // SD,LCD,Buttons take more memory, block buffer needs to be smaller
 #else
-  #define BLOCK_BUFFER_SIZE 16 // maximize block buffer
+  #define BLOCK_BUFFER_SIZE 64 // maximize block buffer
 #endif
 
 // @section more
