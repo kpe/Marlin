@@ -46,9 +46,11 @@ Here are some standard links for getting your machine calibrated:
 // User-specified version info of this build to display in [Pronterface, etc] terminal window during
 // startup. Implementation of an idea by Prof Braino to inform user that any changes made to this
 // build by the user have been successfully uploaded into firmware.
+#define STRING_VERSION_CONFIG_H __DATE__ " " __TIME__ // build date and time
+
 #define STRING_CONFIG_H_AUTHOR "(kpe, Overbolt)" // Who made the changes.
 #define STRING_SPLASH_LINE1 BUILD_VERSION // will be shown during bootup in line 1
-//#define STRING_SPLASH_LINE2 STRING_DISTRIBUTION_DATE // will be shown during bootup in line 2
+#define STRING_SPLASH_LINE2 STRING_DISTRIBUTION_DATE // will be shown during bootup in line 2
 
 // @section machine
 
@@ -60,7 +62,8 @@ Here are some standard links for getting your machine calibrated:
 
 // This determines the communication speed of the printer
 // :[2400,9600,19200,38400,57600,115200,250000]
-#define BAUDRATE 115200
+#define BAUDRATE 19200
+//#define BAUDRATE 115200
 
 // This enables the serial port associated to the Bluetooth interface
 //#define BTENABLED              // Enable BT interface on AT90USB devices
@@ -170,11 +173,11 @@ Here are some standard links for getting your machine calibrated:
 // When temperature exceeds max temp, your heater will be switched off.
 // This feature exists to protect your hotend from overheating accidentally, but *NOT* from thermistor short/failure!
 // You should use MINTEMP for thermistor short/failure protection.
-#define HEATER_0_MAXTEMP 275
+#define HEATER_0_MAXTEMP 290
 #define HEATER_1_MAXTEMP 275
 #define HEATER_2_MAXTEMP 275
 #define HEATER_3_MAXTEMP 275
-#define BED_MAXTEMP 150
+#define BED_MAXTEMP 130
 
 // If your bed has low resistance e.g. .6 ohm and throws the fuse you can duty cycle it to reduce the
 // average current. The value should be an integer and the heat bed will be turned on for 1 interval of
@@ -193,24 +196,35 @@ Here are some standard links for getting your machine calibrated:
 // Comment the following line to disable PID and enable bang-bang.
 #define PIDTEMP
 #define BANG_MAX 255 // limits current to nozzle while in bang-bang mode; 255=full current
-#define PID_MAX BANG_MAX // limits current to nozzle while PID is active (see PID_FUNCTIONAL_RANGE below); 255=full current
+#define PID_MAX 200 // BANG_MAX // limits current to nozzle while PID is active (see PID_FUNCTIONAL_RANGE below); 255=full current
 #ifdef PIDTEMP
   //#define PID_DEBUG // Sends debug data to the serial port.
   //#define PID_OPENLOOP 1 // Puts PID in open loop. M104/M140 sets the output power from 0 to PID_MAX
   //#define SLOW_PWM_HEATERS // PWM with very low frequency (roughly 0.125Hz=8s) and minimum state time of approximately 1s useful for heaters driven by a relay
   //#define PID_PARAMS_PER_EXTRUDER // Uses separate PID parameters for each extruder (useful for mismatched extruders)
                                     // Set/get with gcode: M301 E[extruder number, 0-2]
-  #define PID_FUNCTIONAL_RANGE 10 // If the temperature difference between the target temperature and the actual temperature
+  #define PID_FUNCTIONAL_RANGE 25 // If the temperature difference between the target temperature and the actual temperature
                                   // is more then PID_FUNCTIONAL_RANGE then the PID will be shut off and the heater will be set to min/max.
   #define PID_INTEGRAL_DRIVE_MAX PID_MAX  //limit for the integral term
   #define K1 0.95 //smoothing factor within the PID
 
   // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
-  // Ultimaker
-  #define  DEFAULT_Kp 22.2
-  #define  DEFAULT_Ki 1.08
-  #define  DEFAULT_Kd 114
 
+  // Overbolt 180deg
+//  #define  DEFAULT_Kp 15.25
+//  #define  DEFAULT_Ki 0.63
+//  #define  DEFAULT_Kd 92.65
+
+  // Overbolt 240deg
+  #define  DEFAULT_Kp 12.89
+  #define  DEFAULT_Ki 0.44
+  #define  DEFAULT_Kd 94.40
+
+  
+  // Ultimaker
+  //#define  DEFAULT_Kp 22.2
+  //#define  DEFAULT_Ki 1.08
+  //#define  DEFAULT_Kd 114
   // MakerGear
   //#define  DEFAULT_Kp 7.0
   //#define  DEFAULT_Ki 0.1
@@ -294,7 +308,7 @@ Here are some standard links for getting your machine calibrated:
  * the firmware will halt as a safety precaution.
  */
 
-#define THERMAL_PROTECTION_HOTENDS // Enable thermal protection for all extruders
+//#define THERMAL_PROTECTION_HOTENDS // Enable thermal protection for all extruders
 #define THERMAL_PROTECTION_BED     // Enable thermal protection for the heated bed
 
 //===========================================================================
@@ -317,37 +331,37 @@ Here are some standard links for getting your machine calibrated:
   // Make delta curves from many straight lines (linear interpolation).
   // This is a trade-off between visible corners (not enough segments)
   // and processor overload (too many expensive sqrt calls).
-  #define DELTA_SEGMENTS_PER_SECOND 200
+  #define DELTA_SEGMENTS_PER_SECOND 160
 
   // NOTE NB all values for DELTA_* values MUST be floating point, so always have a decimal point in them
 
   // Center-to-center distance of the holes in the diagonal push rods.
-  #define DELTA_DIAGONAL_ROD 215.0 // mm
+  #define DELTA_DIAGONAL_ROD 210.0 // mm
 
   // Horizontal offset from middle of printer to smooth rod center.
-  #define DELTA_SMOOTH_ROD_OFFSET 145.0 // mm
+  #define DELTA_SMOOTH_ROD_OFFSET 150.0 // mm
 
   // Horizontal offset of the universal joints on the end effector.
-  #define DELTA_EFFECTOR_OFFSET 19.9 // mm
+  #define DELTA_EFFECTOR_OFFSET 23.7 // mm
 
   // Horizontal offset of the universal joints on the carriages.
-  #define DELTA_CARRIAGE_OFFSET 19.5 // mm
+  #define DELTA_CARRIAGE_OFFSET 10.0 // mm
 
   // Horizontal distance bridged by diagonal push rods when effector is centered.
   #define DELTA_RADIUS (DELTA_SMOOTH_ROD_OFFSET-DELTA_EFFECTOR_OFFSET-DELTA_CARRIAGE_OFFSET)
 
   // Print surface diameter/2 minus unreachable space (avoid collisions with vertical towers).
-  #define DELTA_PRINTABLE_RADIUS 90
+  #define DELTA_PRINTABLE_RADIUS 90.0
 
 #endif
 
 // Enable this option for Toshiba steppers
-//#define CONFIG_STEPPERS_TOSHIBA
+// #define CONFIG_STEPPERS_TOSHIBA
 
 // @section homing
 
 // coarse Endstop Settings
-#define ENDSTOPPULLUPS // Comment this out (using // at the start of the line) to disable the endstop pullup resistors
+//#define ENDSTOPPULLUPS // Comment this out (using // at the start of the line) to disable the endstop pullup resistors
 
 #ifndef ENDSTOPPULLUPS
   // fine endstop settings: Individual pullups. will be ignored if ENDSTOPPULLUPS is defined
@@ -369,8 +383,9 @@ const bool Y_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of the endstop.
 const bool Z_PROBE_ENDSTOP_INVERTING = false; // set to true to invert the logic of the endstop.
 //#define DISABLE_MAX_ENDSTOPS
-//#define DISABLE_MIN_ENDSTOPS // Deltas only use min endstops for probing
+#define DISABLE_MIN_ENDSTOPS // Deltas only use min endstops for probing
 
+// @section machine
 // If you want to enable the Z Probe pin, but disable its use, uncomment the line below.
 // This only affects a Z Probe Endstop if you have separate Z min endstop as well and have
 // activated Z_PROBE_ENDSTOP below. If you are using the Z Min endstop on your Z Probe,
@@ -680,7 +695,7 @@ const bool Z_PROBE_ENDSTOP_INVERTING = false; // set to true to invert the logic
 #ifdef MANUAL_HOME_POSITIONS
   #define MANUAL_X_HOME_POS 0
   #define MANUAL_Y_HOME_POS 0
-  #define MANUAL_Z_HOME_POS 220 // For delta: Distance between nozzle and print surface after homing.
+  #define MANUAL_Z_HOME_POS 191.2 // For delta: Distance between nozzle and print surface after homing.
 #endif
 
 // @section movement
@@ -689,23 +704,35 @@ const bool Z_PROBE_ENDSTOP_INVERTING = false; // set to true to invert the logic
  * MOVEMENT SETTINGS
  */
 
+////// #define NUM_AXIS 4 // The axis order in all axis related arrays is X, Y, Z, E
+// set the homing speeds (mm/min)
 // delta homing speeds must be the same on xyz
-#define HOMING_FEEDRATE {50*60, 50*60, 50*60, 0}  // set the homing speeds (mm/min)
+#define HOMING_FEEDRATE_X (90*60)
+#define HOMING_FEEDRATE_Y (90*60)
+#define HOMING_FEEDRATE_Z (90*60)
+#define HOMING_FEEDRATE_E 0
+#define HOMING_FEEDRATE {HOMING_FEEDRATE_X,HOMING_FEEDRATE_Y,HOMING_FEEDRATE_Z,HOMING_FEEDRATE_E}
+
+#define XYZ_FULL_STEPS_PER_ROTATION 200
+#define XYZ_MICROSTEPS 16
+#define XYZ_BELT_PITCH 2
+#define XYZ_PULLEY_TEETH 20
+#define XYZ_STEPS (XYZ_FULL_STEPS_PER_ROTATION * XYZ_MICROSTEPS / double(XYZ_BELT_PITCH) / double(XYZ_PULLEY_TEETH))
 
 // default settings
 // delta speeds must be the same on xyz
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {80, 80, 80, 760*1.1}  // default steps per unit for Kossel (GT2, 20 tooth)
-#define DEFAULT_MAX_FEEDRATE          {500, 500, 500, 25}    // (mm/sec)
-#define DEFAULT_MAX_ACCELERATION      {9000,9000,9000,10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for skeinforge 40+, for older versions raise them a lot.
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {XYZ_STEPS, XYZ_STEPS, XYZ_STEPS, 489}
+#define DEFAULT_MAX_FEEDRATE          {150, 150, 150, 150}    // (mm/sec)
+#define DEFAULT_MAX_ACCELERATION      {1900,1900,1900,1900}    // X, Y, Z, E maximum start speed for accelerated moves.
 
-#define DEFAULT_ACCELERATION          3000    // X, Y, Z and E acceleration in mm/s^2 for printing moves
-#define DEFAULT_RETRACT_ACCELERATION  3000    // E acceleration in mm/s^2 for retracts
-#define DEFAULT_TRAVEL_ACCELERATION   3000    // X, Y, Z acceleration in mm/s^2 for travel (non printing) moves
+#define DEFAULT_ACCELERATION          1000    // X, Y, Z and E acceleration in mm/s^2 for printing moves
+#define DEFAULT_RETRACT_ACCELERATION  1000    // E acceleration in mm/s^2 for retracts
+#define DEFAULT_TRAVEL_ACCELERATION   1000    // X, Y, Z acceleration in mm/s^2 for travel (non printing) moves
 
 // The speed change that does not require acceleration (i.e. the software might assume it can be done instantaneously)
 #define DEFAULT_XYJERK                20.0    // (mm/sec)
 #define DEFAULT_ZJERK                 20.0    // (mm/sec) Must be same as XY for delta
-#define DEFAULT_EJERK                 5.0     // (mm/sec)
+#define DEFAULT_EJERK                 20.0    // (mm/sec)
 
 
 //=============================================================================

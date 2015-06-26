@@ -1,3 +1,7 @@
+// Example configuration file for OpenBeam Kossel Pro
+// tested on 2015-05-19 by @Wackerbarth
+// using Arduino 1.6.5 (Mac)
+
 #ifndef CONFIGURATION_ADV_H
 #define CONFIGURATION_ADV_H
 
@@ -15,11 +19,16 @@
 #define BED_CHECK_INTERVAL 5000 //ms between checks in bang-bang control
 
 /**
- * Thermal Protection parameters
+ * Heating Sanity Check
+ *
+ * Whenever an M104 or M109 increases the target temperature this will wait for WATCH_TEMP_PERIOD milliseconds,
+ * and if the temperature hasn't increased by WATCH_TEMP_INCREASE degrees, the machine is halted, requiring a
+ * hard reset. This test restarts with any M104/M109, but only if the current temperature is below the target
+ * by at least 2 * WATCH_TEMP_INCREASE degrees celsius.
  */
 #ifdef THERMAL_PROTECTION_HOTENDS
-  #define THERMAL_PROTECTION_PERIOD 40        // Seconds
-  #define THERMAL_PROTECTION_HYSTERESIS 4     // Degrees Celsius
+  #define THERMAL_PROTECTION_PERIOD 60        // Seconds
+  #define THERMAL_PROTECTION_HYSTERESIS 3     // Degrees Celsius
 
   /**
    * Whenever an M104 or M109 increases the target temperature the firmware will wait for the
@@ -27,12 +36,12 @@
    * degrees, the machine is halted, requiring a hard reset. This test restarts with any M104/M109,
    * but only if the current temperature is far enough below the target for a reliable test.
    */
-  #define WATCH_TEMP_PERIOD 16                // Seconds
-  #define WATCH_TEMP_INCREASE 4               // Degrees Celsius
+  #define WATCH_TEMP_PERIOD 64                // Seconds
+  #define WATCH_TEMP_INCREASE 2               // Degrees Celsius
 #endif
 
 #ifdef THERMAL_PROTECTION_BED
-  #define THERMAL_PROTECTION_BED_PERIOD 20    // Seconds
+  #define THERMAL_PROTECTION_BED_PERIOD 40    // Seconds
   #define THERMAL_PROTECTION_BED_HYSTERESIS 2 // Degrees Celsius
 #endif
 
@@ -120,7 +129,7 @@
 
 // @section homing
 
-#define ENDSTOPS_ONLY_FOR_HOMING // If defined the endstops will only be used for homing
+//#define ENDSTOPS_ONLY_FOR_HOMING // If defined the endstops will only be used for homing
 
 // @section extras
 
@@ -251,6 +260,7 @@
 #define DEFAULT_MINSEGMENTTIME        20000
 
 // If defined the movements slow down when the look ahead buffer is only half full
+// (don't use SLOWDOWN with DELTA because DELTA generates hundreds of segments per second)
 //#define SLOWDOWN
 
 // Frequency limit
@@ -475,7 +485,7 @@ const unsigned int dropsegments=5; //everything with less than this number of st
 
 // Add support for experimental filament exchange support M600; requires display
 #ifdef ULTIPANEL
-  //#define FILAMENTCHANGEENABLE
+  #define FILAMENTCHANGEENABLE
   #ifdef FILAMENTCHANGEENABLE
     #define FILAMENTCHANGE_XPOS 3
     #define FILAMENTCHANGE_YPOS 3
