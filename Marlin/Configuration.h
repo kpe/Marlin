@@ -215,10 +215,15 @@ Here are some standard links for getting your machine calibrated:
 //  #define  DEFAULT_Ki 0.63
 //  #define  DEFAULT_Kd 92.65
 
-  // Overbolt 240deg
-  #define  DEFAULT_Kp 12.89
-  #define  DEFAULT_Ki 0.44
-  #define  DEFAULT_Kd 94.40
+  // Overbolt 240deg magma hotend
+//  #define  DEFAULT_Kp 12.89
+//  #define  DEFAULT_Ki 0.44
+//  #define  DEFAULT_Kd 94.40
+
+  // Overbolt 240deg magma with marlin heatblock
+  #define  DEFAULT_Kp 26.37
+  #define  DEFAULT_Ki 1.61
+  #define  DEFAULT_Kd 108.24
 
   
   // Ultimaker
@@ -331,7 +336,7 @@ Here are some standard links for getting your machine calibrated:
   // Make delta curves from many straight lines (linear interpolation).
   // This is a trade-off between visible corners (not enough segments)
   // and processor overload (too many expensive sqrt calls).
-  #define DELTA_SEGMENTS_PER_SECOND 160
+  #define DELTA_SEGMENTS_PER_SECOND 120
 
   // NOTE NB all values for DELTA_* values MUST be floating point, so always have a decimal point in them
 
@@ -342,7 +347,7 @@ Here are some standard links for getting your machine calibrated:
   #define DELTA_SMOOTH_ROD_OFFSET 150.0 // mm
 
   // Horizontal offset of the universal joints on the end effector.
-  #define DELTA_EFFECTOR_OFFSET 23.7 // mm
+  #define DELTA_EFFECTOR_OFFSET 23.3 // mm
 
   // Horizontal offset of the universal joints on the carriages.
   #define DELTA_CARRIAGE_OFFSET 10.0 // mm
@@ -351,7 +356,7 @@ Here are some standard links for getting your machine calibrated:
   #define DELTA_RADIUS (DELTA_SMOOTH_ROD_OFFSET-DELTA_EFFECTOR_OFFSET-DELTA_CARRIAGE_OFFSET)
 
   // Print surface diameter/2 minus unreachable space (avoid collisions with vertical towers).
-  #define DELTA_PRINTABLE_RADIUS 90.0
+  #define DELTA_PRINTABLE_RADIUS 85.0
 
 #endif
 
@@ -695,7 +700,7 @@ const bool Z_PROBE_ENDSTOP_INVERTING = false; // set to true to invert the logic
 #ifdef MANUAL_HOME_POSITIONS
   #define MANUAL_X_HOME_POS 0
   #define MANUAL_Y_HOME_POS 0
-  #define MANUAL_Z_HOME_POS 191.7 // For delta: Distance between nozzle and print surface after homing.
+  #define MANUAL_Z_HOME_POS 191.9 // For delta: Distance between nozzle and print surface after homing.
 #endif
 
 // @section movement
@@ -721,17 +726,17 @@ const bool Z_PROBE_ENDSTOP_INVERTING = false; // set to true to invert the logic
 
 // default settings
 // delta speeds must be the same on xyz
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {XYZ_STEPS, XYZ_STEPS, XYZ_STEPS, 495} // 464, 488
-#define DEFAULT_MAX_FEEDRATE          {150, 150, 150, 30}    // (mm/sec)
-#define DEFAULT_MAX_ACCELERATION      {1900,1900,1900,1900/2}    // X, Y, Z, E maximum start speed for accelerated moves.
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {XYZ_STEPS, XYZ_STEPS, XYZ_STEPS, 124} // 464, 488
+#define DEFAULT_MAX_FEEDRATE          {250, 250, 250, 25}    // (mm/sec)
+#define DEFAULT_MAX_ACCELERATION      {2000,2000,2000,5000}    // X, Y, Z, E maximum start speed for accelerated moves.
 
-#define DEFAULT_ACCELERATION          1000    // X, Y, Z and E acceleration in mm/s^2 for printing moves
-#define DEFAULT_RETRACT_ACCELERATION  1000    // E acceleration in mm/s^2 for retracts
-#define DEFAULT_TRAVEL_ACCELERATION   1000    // X, Y, Z acceleration in mm/s^2 for travel (non printing) moves
+#define DEFAULT_ACCELERATION          2000    // X, Y, Z and E acceleration in mm/s^2 for printing moves
+#define DEFAULT_RETRACT_ACCELERATION  2000    // E acceleration in mm/s^2 for retracts
+#define DEFAULT_TRAVEL_ACCELERATION   2000    // X, Y, Z acceleration in mm/s^2 for travel (non printing) moves
 
 // The speed change that does not require acceleration (i.e. the software might assume it can be done instantaneously)
-#define DEFAULT_XYJERK                20.0    // (mm/sec)
-#define DEFAULT_ZJERK                 20.0    // (mm/sec) Must be same as XY for delta
+#define DEFAULT_XYJERK                30.0    // (mm/sec)
+#define DEFAULT_ZJERK                 30.0    // (mm/sec) Must be same as XY for delta
 #define DEFAULT_EJERK                 5.0    // (mm/sec)
 
 
